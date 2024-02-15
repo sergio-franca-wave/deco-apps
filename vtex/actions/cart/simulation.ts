@@ -12,6 +12,12 @@ export interface Props {
   items: Item[];
   postalCode: string;
   country: string;
+  paymentData?: {
+    id: string;
+    payments: [{
+      paymentSystem: string;
+    }];
+  };
   RnbBehavior?: 0 | 1;
 }
 
@@ -25,7 +31,7 @@ const action = async (
 ): Promise<SimulationOrderForm> => {
   const cookie = req.headers.get("cookie") ?? "";
   const { vcsDeprecated } = ctx;
-  const { items, postalCode, country, RnbBehavior = 1 } = props;
+  const { items, postalCode, country, paymentData, RnbBehavior = 1 } = props;
   const segment = getSegmentFromBag(ctx);
 
   const response = await vcsDeprecated[
@@ -36,7 +42,12 @@ const action = async (
       sc: segment?.payload.channel,
     },
     {
-      body: { items, country, postalCode },
+      body: {
+        items,
+        postalCode,
+        country,
+        ...(paymentData ? { paymentData } : {}),
+      },
       headers: {
         accept: "application/json",
         "content-type": "application/json",

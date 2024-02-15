@@ -124,6 +124,12 @@ export interface VTEXCommerceStable {
       items: SimulationItem[];
       postalCode?: string;
       country: string;
+      paymentData?: {
+        id: string;
+        payments: [{
+          paymentSystem: string;
+        }];
+      };
     };
   };
   "POST /api/checkout/pub/orderForm": {
